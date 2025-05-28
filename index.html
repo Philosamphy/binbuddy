@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BinBuddy - Profile</title>
+  <title>BinBuddy - Home</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
       </div>
     </div>
     <nav>
-      <a href="index.html">Home</a>
+      <a href="index.html" class="active">Home</a>
       <a href="#">MyTracker</a>
       <a href="#">Maps</a>
       <a href="#">Tutorials</a>
@@ -26,41 +26,38 @@
     </nav>
   </header>
 
-  <div class="container">
-    <div class="left-panel">
-      <div class="profile-info">
-        <img src="raccoon-avatar.png" alt="Avatar">
-        <h2>BOB</h2>
-        <p>@meow • Joined August 2024</p>
-        <p>Location: Seri Kembangan</p>
-        <p>Phone: +60 01010101010</p>
-        <p>Email: bob@meow.com</p>
-        <p>Birthday: Dec 25, 1990</p>
-        <p>Gender: Female</p>
+  <main class="homepage-main">
+    <div class="raccoons-section">
+      <img src="raccoons-bin.png" alt="Raccoons at bin">
+      <div class="paw-streaks">
+        <img src="paw1.png" alt="Paw 1">
+        <img src="paw2.png" alt="Paw 2">
+        <img src="badge.png" alt="Dumpster Detective Badge">
+        <img src="paw3.png" alt="Paw 3">
+        <img src="paw4.png" alt="Paw 4">
       </div>
     </div>
 
-    <div class="right-panel">
-      <div class="panel-box">
-        <h3>Streak</h3>
-        <div class="streaks">
-          <img src="paw1.png" alt="Streak 1">
-          <img src="paw2.png" alt="Streak 2">
-          <img src="badge.png" alt="Dumpster Detective Badge">
-          <img src="paw3.png" alt="Streak 3">
-          <img src="paw4.png" alt="Streak 4">
-        </div>
+    <div class="achievement-section">
+      <div class="badge-notification">
+        <p><strong>Congratulations!</strong> 🐾<br>
+        You’ve just earned the Dumpster Detective badge for recycling 10 items this week!<br>
+        Keep digging through the trash — responsibly! ♻️🦝<br>
+        <a href="profile.html">✔ View your badge in your profile.</a></p>
       </div>
 
-      <div class="panel-box">
-        <h3>Monthly Badges</h3>
-        <div class="badges">
-          <img src="march.png" alt="March Badge">
-          <img src="april.png" alt="April Badge">
-          <img class="locked" src="may.png" alt="May Badge (Locked)">
+      <div class="recycling-tracker">
+        <h3>Recycling Tracker <span class="dropdown">Monthly</span></h3>
+        <img src="recycling-chart.png" alt="Recycling Chart">
+        <div class="legend">
+          <span class="legend-item">🟦 Bottles</span>
+          <span class="legend-item">🟪 Plastic</span>
+          <span class="legend-item">🟨 Aluminum</span>
+          <span class="legend-item">🟧 Paper</span>
+          <span class="legend-item">🟫 E-waste</span>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </body>
 </html>
