@@ -1,66 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BinBuddy - Profile</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile | BinBuddy</title>
+  <link rel="stylesheet" href="profilestyle.css" />
 </head>
 <body>
   <header>
-    <div class="logo-search">
-      <img src="logo.png" alt="BinBuddy Logo">
-      <div class="search-bar">
-        <input type="text" placeholder="Looking for DIY upcycling tutorials?">
-      </div>
+    <div class="top-left">
+      <img src="binbuddy-logo.png" alt="BinBuddy Logo" class="logo" />
     </div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="#">MyTracker</a>
-      <a href="#">Maps</a>
-      <a href="#">Tutorials</a>
-      <a href="#">About</a>
-      <a class="profile-link" href="profile.html">
-        <img src="profile-icon.png" alt="Profile">
+
+    <div class="top-center">
+      <input type="text" class="search-bar" placeholder="Looking for DIY upcycling tutorials?" />
+    </div>
+
+    <div class="top-right">
+      <a href="mytracker.html">MyTracker</a>
+      <a href="tutorials.html">Tutorials</a>
+      <a href="about.html">About</a>
+      <a href="profile.html" class="profile-button">
+        <img src="profile-icon.png" alt="Profile" />
+        Profile
       </a>
-    </nav>
+    </div>
   </header>
 
-  <div class="container">
-    <div class="left-panel">
-      <div class="profile-info">
-        <img src="raccoon-avatar.png" alt="Avatar">
+  <main>
+    <div class="profile-layout">
+      <!-- Left column: Profile Info -->
+      <section class="profile-info">
+        <img src="raccoon-avatar.png" alt="Avatar" class="avatar">
         <h2>BOB</h2>
-        <p>@meow • Joined August 2024</p>
-        <p>Location: Seri Kembangan</p>
-        <p>Phone: +60 01010101010</p>
-        <p>Email: bob@meow.com</p>
-        <p>Birthday: Dec 25, 1990</p>
-        <p>Gender: Female</p>
-      </div>
-    </div>
+        <p>@meow ・ Joined August 2024</p>
+        <p><strong>location:</strong> Seri Kembangan</p>
+        <p><strong>phone:</strong> +60 01010101010</p>
+        <p><strong>email:</strong> bob@meow.com</p>
+        <p><strong>birthday:</strong> dec 25, 1990</p>
+        <p><strong>gender:</strong> female</p>
+      </section>
 
-    <div class="right-panel">
-      <div class="panel-box">
-        <h3>Streak</h3>
-        <div class="streaks">
-          <img src="paw1.png" alt="Streak 1">
-          <img src="paw2.png" alt="Streak 2">
-          <img src="badge.png" alt="Dumpster Detective Badge">
-          <img src="paw3.png" alt="Streak 3">
-          <img src="paw4.png" alt="Streak 4">
+      <!-- Right Top: Points -->
+      <section class="points-section">
+        <div class="points-header">
+          <h3>Points</h3>
+          <div class="points-value">120 🐾</div>
         </div>
-      </div>
+        <div class="bins">
+          <img src="green-bin.png" alt="Green Bin" />
+          <img src="yellow-bin.png" alt="Yellow Bin" />
+          <img src="red-bin.png" alt="Red Bin" />
+        </div>
+        <p class="flow">Collect → Earn → Redeem</p>
+        <a href="redeem.html" class="redeem-button">REDEEM</a>
+      </section>
 
-      <div class="panel-box">
-        <h3>Monthly Badges</h3>
-        <div class="badges">
-          <img src="march.png" alt="March Badge">
-          <img src="april.png" alt="April Badge">
-          <img class="locked" src="may.png" alt="May Badge (Locked)">
+      <!-- Right Bottom: Badges -->
+      <section class="badges-section">
+        <h3>Badges</h3>
+        <div class="badges-grid">
+          <img src="dumpster-detective.png" alt="Badge">
+          <img src="dumpster-detective.png" alt="Badge">
+          <img src="dumpster-detective.png" alt="Badge">
+          <img src="dumpster-detective.png" alt="Badge">
+          <img src="dumpster-detective.png" alt="Badge">
+          <img src="dumpster-detective.png" alt="Badge">
+          <img src="dumpster-detective.png" alt="Badge">
+          <img src="dumpster-detective.png" class="highlighted" alt="Badge">
         </div>
-      </div>
+      </section>
     </div>
-  </div>
+  </main>
 </body>
 </html>
