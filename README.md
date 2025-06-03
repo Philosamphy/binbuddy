@@ -1,7 +1,5 @@
 ﻿# binbuddydraft
 Changes that are still pending : 
-  1. Add page for tutorials to teach users on DIYs using recyclable items
-  2. Add page for about us
-  3. Display vouchers if the amount of points obtained has is sufficient
-  4. Change the structure of streak level in the homepage
-  5. Create a form to edit profile in the profile page
+  1. Display vouchers if the amount of points obtained has is sufficient
+  2. Change the structure of streak level in the homepage
+  3. Create a form to edit profile in the profile page
