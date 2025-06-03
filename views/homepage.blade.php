@@ -56,15 +56,24 @@
     <!-- Left: Interactive Level Tracker -->
     <div class="w-1/2 flex flex-row items-center space-x-6">
       <img src="/racoon.png" alt="Racoon in bin" class="w-60 md:w-72 lg:w-80 xl:w-96"/>
-      <div id="levels" class="flex flex-col space-y-4">
+       <div id="levels" class="flex flex-col space-y-4 items-center mt-8 relative z-10">
         <script>
+          const activeLevels = 5;
           const levelContainer = document.currentScript.parentElement;
-          for (let i = 1; i <= 10; i++) {
+
+          for(let i =1; i <= 10; i++){
+            const isActive = i <= activeLevels;
+            const offsetClass = i % 4 === 1 ? 'translate-x-4' : 
+                                i % 4 === 2 ? '-translate-x-4' : 
+                                i % 4 === 3 ? '-translate-x-6' : '-translate-x-6';
+
             levelContainer.innerHTML += `
-              <div onclick="showStreakForm(${i})" class="level-step bg-green-500 text-white w-12 h-12 flex items-center justify-center rounded-full shadow-md hover:scale-110 transform transition">
-                ${i}
-              </div>`;
-          }
+              <div class="level-step ${isActive ? 'bg-green-500 hover:scale-110 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'}
+              text-white w-12 h-12 flex items-center justify-center rounded-full shadow-md transform transition ${offsetClass}"
+            ${isActive ? `onclick="showStreakForm(${i})"` : ''}>
+          ${i}
+        </div>`;
+        }
         </script>
       </div>
     </div>
@@ -78,7 +87,7 @@
         <button onclick="dismissNotification()" class="absolute top-2 right-3 text-black text-xl font-bold hover:text-red-600">✕</button>
         <p class="text-black font-semibold">
           <center>Congratulations! 🎉</center><br />
-          You’ve just earned the <strong>Dumpster Detective</strong> badge for recycling 10 items this week!<br />
+          You’ve just earned the <strong>Dumpster Detective</strong> badge for recycling 35 items this week!<br />
           Keep digging through the trash — responsibly! ♻️ 🐾<br />
           <center><button onclick="window.location.href='/profile'" class="mt-2 px-4 py-2 bg-blue-700 text-white font-semibold rounded hover:bg-blue-800 transition">
            View your badge
@@ -98,27 +107,36 @@
         <canvas id="recycleChart" class="mt-4"></canvas>
       </div>
 
-      <!-- Streak Form -->
-      <div id="streakForm" class="hidden bg-white p-4 mt-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-semibold mb-2">Maintain Your Streak</h2>
-        <form onsubmit="submitStreak(event)">
-          <label class="block mb-2">What did you recycle today?</label>
-          <input type="text" id="streakInput" class="w-full p-2 border border-gray-300 rounded mb-4" required />
-          <input type="hidden" id="streakLevel" />
-          <label class="block mb-2">Picture proof of activity</label>
-          <input type="file" id="streakInput" accept="image/*" class="w-full p-2 border border-gray-300 rounded mb-4" required />
-          <input type="hidden" id="streakLevel" />
-
-          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            Submit
-          </button>
-          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            Cancel
-          </button>
-        </form>
-      </div>
-    </div>
   </main>
+
+  <!--Streak form-->
+  <div id="streakModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-xl w-96 max-w-full relative">
+    <button onclick="closeStreakForm()" class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">&times;</button>
+    <h2 class="text-xl font-semibold mb-4 text-center">Maintain Your Streak</h2>
+    <form onsubmit="submitStreak(event)" class="space-y-4">
+      <div>
+        <label class="block mb-1 font-medium">What did you recycle today?</label>
+        <input type="text" id="streakTextInput" class="w-full p-2 border border-gray-300 rounded" required />
+      </div>
+
+      <div>
+        <label class="block mb-1 font-medium">Picture proof of activity</label>
+        <input type="file" id="streakFileInput" accept="image/*" class="w-full p-2 border border-gray-300 rounded" required />
+      </div>
+
+      <input type="hidden" id="streakLevelInput" />
+
+      <button type="submit" class="bg-green-600 text-white w-full py-2 rounded hover:bg-green-700">
+        Submit
+      </button>
+
+    </form>
+  </div>
+</div>
+
+  <!--footer-->
+  <footer class="flex justify-center items-center bg-white px-6 py-4 shadow-md">Created by BinBuddy | © 2025 All rights reserved</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
@@ -176,21 +194,25 @@
     }
 
     function showStreakForm(level) {
-      document.getElementById('streakLevel').value = level;
-      document.getElementById('streakForm').classList.remove('hidden');
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
+    document.getElementById('streakModal').classList.remove('hidden');
+    document.getElementById('streakLevelInput').value = level;
+  }
 
-    function submitStreak(event) {
-      event.preventDefault();
-      const level = document.getElementById('streakLevel').value;
-      const item = document.getElementById('streakInput').value.trim();
-      if (item) {
-        alert(`Recycling entry for Level ${level}: ${item}`);
-        document.getElementById('streakForm').classList.add('hidden');
-        document.getElementById('streakInput').value = '';
-      }
+  function closeStreakForm() {
+    document.getElementById('streakModal').classList.add('hidden');
+  }
+
+  function submitStreak(event) {
+    event.preventDefault();
+    const level = document.getElementById('streakLevelInput').value;
+    const inputText = document.getElementById('streakTextInput').value;
+    const inputFile = document.getElementById('streakFileInput').files[0];
+
+    if (inputText && inputFile) {
+      alert(`Level ${level} streak submitted!`);
+      closeStreakForm();
     }
+  }
 
     window.onload = () => initChart();
   </script>
