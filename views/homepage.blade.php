@@ -57,24 +57,6 @@
     <div class="w-1/2 flex flex-row items-center space-x-6">
       <img src="/racoon.png" alt="Racoon in bin" class="w-60 md:w-72 lg:w-80 xl:w-96"/>
        <div id="levels" class="flex flex-col space-y-4 items-center mt-8 relative z-10">
-        <script>
-          const activeLevels = 5;
-          const levelContainer = document.currentScript.parentElement;
-
-          for(let i =1; i <= 10; i++){
-            const isActive = i <= activeLevels;
-            const offsetClass = i % 4 === 1 ? 'translate-x-4' : 
-                                i % 4 === 2 ? '-translate-x-4' : 
-                                i % 4 === 3 ? '-translate-x-6' : '-translate-x-6';
-
-            levelContainer.innerHTML += `
-              <div class="level-step ${isActive ? 'bg-green-500 hover:scale-110 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'}
-              text-white w-12 h-12 flex items-center justify-center rounded-full shadow-md transform transition ${offsetClass}"
-            ${isActive ? `onclick="showStreakForm(${i})"` : ''}>
-          ${i}
-        </div>`;
-        }
-        </script>
       </div>
     </div>
 
@@ -127,7 +109,7 @@
 
       <input type="hidden" id="streakLevelInput" />
 
-      <button type="submit" class="bg-green-600 text-white w-full py-2 rounded hover:bg-green-700">
+      <button type="submit" id="submitStreakBtn" class="bg-green-600 text-white w-full py-2 rounded hover:bg-green-700">
         Submit
       </button>
 
@@ -138,62 +120,63 @@
   <!--footer-->
   <footer class="flex justify-center items-center bg-white px-6 py-4 shadow-md">Created by BinBuddy | © 2025 All rights reserved</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const ctx = document.getElementById('recycleChart').getContext('2d');
-    let chart;
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Load and render the recycling chart
+  const ctx = document.getElementById('recycleChart').getContext('2d');
+  let chart;
 
-    const chartData = {
-      day: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        data: [3, 6, 7, 8, 9, 5, 4]
-      },
-      week: {
-        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-        data: [25, 30, 28, 35]
-      },
-      month: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-        data: [100, 120, 110, 130, 150]
-      }
-    };
+  const chartData = {
+    day: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: [3, 6, 7, 8, 9, 5, 4]
+    },
+    week: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      data: [25, 30, 28, 35]
+    },
+    month: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+      data: [100, 120, 110, 130, 150]
+    }
+  };
 
-    function initChart(view = 'day') {
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: chartData[view].labels,
-          datasets: [{
-            label: 'Recycled Items',
-            data: chartData[view].data,
-            backgroundColor: '#4ade80'
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: context => ` ${context.parsed.y} items recycled`
-              }
+  function initChart(view = 'day') {
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartData[view].labels,
+        datasets: [{
+          label: 'Recycled Items',
+          data: chartData[view].data,
+          backgroundColor: '#4ade80'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: context => ` ${context.parsed.y} items recycled`
             }
           }
         }
-      });
-    }
+      }
+    });
+  }
 
-    function updateChart() {
-      const view = document.getElementById('viewSelect').value;
-      initChart(view);
-    }
+  function updateChart() {
+    const view = document.getElementById('viewSelect').value;
+    initChart(view);
+  }
 
-    function dismissNotification() {
-      document.getElementById('notificationBox').style.display = 'none';
-    }
+  function dismissNotification() {
+    document.getElementById('notificationBox').style.display = 'none';
+  }
 
-    function showStreakForm(level) {
+  function showStreakForm(level) {
     document.getElementById('streakModal').classList.remove('hidden');
     document.getElementById('streakLevelInput').value = level;
   }
@@ -202,28 +185,98 @@
     document.getElementById('streakModal').classList.add('hidden');
   }
 
-  function submitStreak(event) {
-    event.preventDefault();
-    const level = document.getElementById('streakLevelInput').value;
-    const inputText = document.getElementById('streakTextInput').value;
-    const inputFile = document.getElementById('streakFileInput').files[0];
+   const activeLevels = parseInt(localStorage.getItem('activeLevels') || '12');
+  const levelContainer = document.getElementById('levels');
 
-    if (inputText && inputFile) {
-      alert(`Level ${level} streak submitted!`);
-      closeStreakForm();
+  const submittedLevels = JSON.parse(localStorage.getItem('submittedLevels') || '[]');
+  for (let i = 1; i <= 30; i++) {
+    const isActive = i <= activeLevels;
+    const isSubmitted = submittedLevels.includes(i);
+    const offsetClass = i % 4 === 1 ? 'translate-x-4' :
+                        i % 4 === 2 ? '-translate-x-4' :
+                        i % 4 === 3 ? '-translate-x-6' : '-translate-x-6';
+
+    let bgColorClass = 'bg-gray-400 cursor-not-allowed';
+    if (isActive && isSubmitted) {
+      bgColorClass = 'bg-yellow-700 cursor-pointer';
+    } else if (isActive) {
+      bgColorClass = 'bg-green-500 hover:scale-110 cursor-pointer';
     }
+
+    levelContainer.innerHTML += `
+      <div class="level-step ${bgColorClass} text-white w-12 h-12 flex items-center justify-center rounded-full shadow-md transform transition ${offsetClass}"
+        ${isActive ? `onclick="showStreakForm(${i})"` : ''}>
+        ${i}
+      </div>`;
   }
 
-    window.onload = () => initChart();
-  </script>
+  function submitStreak(event) {
+    event.preventDefault();
 
-  <script>
-    function redirectToMap() {
-      const location = document.getElementById('locationInput').value.trim();
-      if (location) {
-        window.location.href = `/search?location=${encodeURIComponent(location)}`;
-      }
+    const level = parseInt(document.getElementById('streakLevelInput').value);
+    const inputText = document.getElementById('streakTextInput').value.trim();
+    const inputFile = document.getElementById('streakFileInput').files[0];
+
+    if (!inputText || !inputFile) {
+      alert("Please complete the form.");
+      return;
     }
-  </script>
+
+    const today = new Date().toISOString().split('T')[0];
+    const streaks = JSON.parse(localStorage.getItem('streaks') || '[]');
+
+    let dailySubmittedLevels = JSON.parse(localStorage.getItem('dailySubmittedLevels') || '{}');
+        if (!dailySubmittedLevels[today]) {
+           dailySubmittedLevels[today] = [];
+       }
+
+       if (!dailySubmittedLevels[today].includes(level)) {
+    dailySubmittedLevels[today].push(level);
+    localStorage.setItem('dailySubmittedLevels', JSON.stringify(dailySubmittedLevels));
+
+    if (!streaks.includes(today)) {
+      streaks.push(today);
+      localStorage.setItem('streaks', JSON.stringify(streaks));
+    }
+
+    if (!submittedLevels.includes(level)) {
+      submittedLevels.push(level);
+      localStorage.setItem('submittedLevels', JSON.stringify(submittedLevels));
+    }
+
+    let activeLevels = parseInt(localStorage.getItem('activeLevels') || '12');
+    const newLevel = Math.max(activeLevels + 1, level);
+    localStorage.setItem('activeLevels', newLevel);
+
+    let points = parseInt(localStorage.getItem('points') || '0');
+    let updatedPoints = points + 10;
+    localStorage.setItem('points', updatedPoints);
+  }
+
+      closeStreakForm();
+      alert("Streak submitted!");
+      location.reload();
+  }
+
+  window.onload = () => {
+    initChart();
+  };
+
+  document.getElementById("submitStreakBtn").addEventListener("click", function (){
+     let points = parseInt(localStorage.getItem('points') || '0');
+     let updatedPoints = points + 10;
+     localStorage.setItem('points', updatedPoints);
+  })
+</script>
+
+<script>
+  function redirectToMap() {
+    const location = document.getElementById('locationInput').value.trim();
+    if (location) {
+      window.location.href = `/search?location=${encodeURIComponent(location)}`;
+    }
+  }
+</script>
+
 </body>
 </html>
