@@ -34,6 +34,7 @@
 
     .profile-info {
       text-align: center;
+      font-size: 15px;
     }
 
     .avatar {
@@ -171,7 +172,7 @@
       align-items: center;
     }
 
-    .points-value {
+    #points-value {
       font-size: 1.6rem;
       font-weight: 600;
       color: #34a853;
@@ -205,13 +206,13 @@
       <!-- Profile Info -->
       <section class="card profile-info">
         <center><img src="/profile.jpg" alt="Avatar" class="avatar" /></center>
-        <h2>BOB</h2>
-        <p>@meow ・ Joined August 2024</p>
-        <p><strong>Location:</strong> Seri Kembangan</p>
-        <p><strong>Phone:</strong> +60 01010101010</p>
-        <p><strong>Email:</strong> bob@meow.com</p>
-        <p><strong>Birthday:</strong> Dec 25, 1990</p>
-        <p><strong>Gender:</strong> Female</p>
+        <h2 id="userName">BOB</h2>
+        <p id="userHandle">@meow ・ Joined August 2024</p>
+        <p><strong>Location:</strong> <span id="userLocation">Seri Kembangan</span></p>
+        <p><strong>Phone:</strong> <span id="userPhone"> +60 01010101010<span></p>
+        <p><strong>Email:</strong> <span id="userEmail"> bob@meow.com</span></p>
+        <p><strong>Birthday:</strong> <span id="userBirthday"> Dec 25, 1990</span></p>
+        <p><strong>Gender:</strong> <span id="userGender"> Female</span></p>
 
         <div class="mt-6 flex flex-col gap-3 items-center">
           <button onclick="openModal()" class="px-4 py-2 bg-green-700 text-white font-semibold rounded hover:bg-green-800 transition">Edit Profile</button>
@@ -223,7 +224,7 @@
       <section class="card points-section">
         <div class="points-header">
           <h3>Points</h3>
-          <div class="points-value">210 🐾</div>
+          <div id="points-value">0 </div>
         </div>
         <div class="bins">
           <img src="/green_bin.png" alt="Green Bin" title="Paper/Organic" />
@@ -233,18 +234,18 @@
         <p class="text-center font-medium">Collect → Earn → Redeem</p>
         <div class="reward-list">
           <div class="reward-item">
-            <span class="points">200 <img src="paw.png" class="paw-icon" /></span>
-            <a href="#" class="voucher">RM10 Printy Malaysia Gift Voucher</a>
+            <span class="points">100 <img src="/paw.png" class="paw-icon" /></span>
+            <p class="voucher">RM10 Printy Malaysia Gift Voucher</p>
             <button onclick="openModal1()" class="redeem-button">REDEEM</button>
           </div>
           <div class="reward-item">
-            <span class="points">500 <img src="paw.png" class="paw-icon" /></span>
-            <a href="#" class="voucher">RM20 Love Earth Gift Voucher</a>
+            <span class="points">200 <img src="/paw.png" class="paw-icon" /></span>
+            <p class="voucher">RM20 Love Earth Gift Voucher</p>
             <button class="redeem-button">REDEEM</button>
           </div>
           <div class="reward-item">
-            <span class="points">1000 <img src="paw.png" class="paw-icon" /></span>
-            <a href="#" class="voucher">RM50 The Body Shop Gift Voucher</a>
+            <span class="points">500 <img src="/paw.png" class="paw-icon" /></span>
+            <p class="voucher">RM50 The Body Shop Gift Voucher</p>
             <button class="redeem-button">REDEEM</button>
           </div>
         </div>
@@ -261,7 +262,7 @@
           <img src="/badge.png" alt="Badge" title="50 Recycles" />
           <img src="/badge.png" alt="Badge" title="Eco Star" />
           <img src="/badge.png" alt="Badge" title="Bin Master" />
-          <img src="/badge.png" class="highlighted" alt="Badge" title="Legend Recycler!" />
+          <img src="/badge.png" class="highlighted cursor-pointer" alt="Badge" title="Legend Recycler!" onclick="openBadgeModal()"/>
         </div>
       </section>
     </div>
@@ -271,18 +272,19 @@
   <div class="modal" id="modal">
     <div class="modal-inner">
       <h2 class="text-2xl font-bold text-green-700 mb-4">Edit your BinBuddy Profile</h2>
-      <form method="POST" class="space-y-4">
-        <input type="text" placeholder="Full Name" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
-        <input type="email" placeholder="Email Address" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
-        <input type="text" placeholder="Location" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
-        <input type="tel" placeholder="Phone Number" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
-        <input type="date" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
+      <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}" class="space-y-4">
+        @csrf
+        <input type="text" id="fullname" name="fullname" placeholder="Full Name" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
+        <input type="email" id="email" name="email" placeholder="Email Address" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
+        <input type="text" id="location" name="location" placeholder="Location" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
+        <input type="tel" id="phone_number" name="phone_number" placeholder="Phone Number" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
+        <input type="date" id="birthday" name="birthday" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
         <div class="flex gap-4">
-          <label><input type="radio" name="gender" value="Male" required /> Male</label>
-          <label><input type="radio" name="gender" value="Female" required /> Female</label>
+          <label><input type="radio" id="gender-male" name="gender" value="Male" required /> Male</label>
+          <label><input type="radio" id="gender-female" name="gender" value="Female" required /> Female</label>
         </div>
-        <input type="password" placeholder="Password" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
-        <input type="password" placeholder="Confirm Password" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
+        <input type="password" id="password" name="password" placeholder="Password" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
         <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-full">Edit</button>
         <button type="button" onclick="closeModal()" class="w-full bg-gray-300 py-2 rounded-full mt-2">Close</button>
       </form>
@@ -294,18 +296,26 @@
   <div class="modal-inner bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
     <form method="POST" class="space-y-4 text-center">
       <p><img src="/voucherrm10.png" class="mx-auto" alt="Voucher"></p>
+      <p class="text-lg font-semibold text-green-700">You've redeemed the RM10 Printy Malaysia Voucher!</p>
       <button type="button" onclick="closeModal1()" class="w-full bg-gray-300 py-2 rounded-full mt-2">Close</button>
     </form>
   </div>
 </div>
 
+<div class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden" id="badge-modal">
+  <div class="modal-inner bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+    <img src="/badge.png" alt="Highlighted Badge" class="mx-auto mb-4"/>
+    <h3 class="text-xl font-bond text-purple-600">Legend Recycler!</h3>
+    <p class="text-gray-600">You've reached the ultimate recycling milestone. Keep it up!</p>
+    <button type="button" onclick="closeBadgeModal()" class="mt-4 w-full bg-gray-300 py-2 rounded-full">Close</button>
+  </div>
+  </div>
 
   <!-- Footer -->
   <footer class="flex justify-center items-center bg-white px-6 py-4 shadow-md mt-8">
     Created by BinBuddy | © 2025 All rights reserved
   </footer>
 
-  <!-- Script -->
    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
     function redirectToMap() {
@@ -314,6 +324,25 @@
         window.location.href = `/search?location=${encodeURIComponent(location)}`;
       }
     }
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  let points = parseInt(localStorage.getItem("points")) || 0;
+
+  if (user) {
+    document.getElementById("userName").textContent = user.fullname;
+    document.getElementById("userHandle").textContent = `@${user.fullname.split(" ")[0]} ・ Joined ${new Date(user.created_at).toLocaleString('default', { month: 'long', year: 'numeric' })}`;
+    document.getElementById("userLocation").textContent = user.location;
+    document.getElementById("userPhone").textContent = user.phone_number;
+    document.getElementById("userEmail").textContent = user.email;
+    document.getElementById("userBirthday").textContent = new Date(user.birthday).toLocaleDateString('en-GB', {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+    document.getElementById("userGender").textContent = user.gender;
+    document.getElementById("points-value").textContent = points || 0;
+  } else {
+    alert("User not logged in.");
+    window.location.href = "/";
+  }
 
     function openModal() {
       document.getElementById("modal").classList.add("open");
@@ -331,15 +360,90 @@
       document.getElementById("modal-voucher").classList.remove("open");
     }
 
-    document.querySelectorAll('.redeem-button').forEach(button => {
+   document.querySelectorAll('.redeem-button').forEach(button => {
     button.addEventListener('click', function () {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+      const rewardItem = button.closest('.reward-item');
+      const costText = rewardItem.querySelector('.points').textContent.trim();
+      const cost = parseInt(costText.replace(/\D/g, ''));
+
+      if (points >= cost) {
+        if (confirm(`Redeem this reward for ${cost} points?`)) {
+          points -= cost;
+          localStorage.setItem("points", points);
+          document.getElementById("points-value").textContent = points;
+
+          if (cost === 100) openModal1();
+
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        }
+      } else {
+        alert("Not enough points to redeem this reward.");
+      }
     });
   });
+
+ function handleStreakSubmission() {
+  const pointsEarned = 10; 
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+     user.points = (user.points || 0) + pointsEarned;
+  localStorage.setItem("user", JSON.stringify(user));
+  }
+
+  document.getElementById("points-value").textContent = points;
+}
+
+
+function openBadgeModal(){
+  document.getElementById("badge-modal").classList.remove("hidden");
+  document.getElementById("badge-modal").classList.add("open");
+}
+
+function closeBadgeModal(){
+  document.getElementById("badge-modal").classList.remove("open");
+  document.getElementById("badge-modal").classList.add("hidden");
+}
+
+document.getElementById("editProfileForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const updatedUser = {
+    fullname: document.getElementById("fullname").value,
+    email: document.getElementById("email").value,
+    location: document.getElementById("location").value,
+    phone_number: document.getElementById("phone_number").value,
+    birthday: document.getElementById("birthday").value,
+    gender: document.querySelector('input[name="gender"]:checked')?.value,
+    points: JSON.parse(localStorage.getItem("points")) || 0,
+    created_at: user.created_at,
+    id: user.id
+  }
+
+  const points = localStorage.getItem('points');
+
+  if (points !== null){
+    document.getElementById('points-value').textContent = points;
+  }
+
+  localStorage.setItem("user", JSON.stringify(updatedUser));
+  location.reload();
+});
+
+document.querySelectorAll('.reward-item').forEach(item => {
+  const requiredPoints = parseInt(item.querySelector('.points').textContent);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const currentPoints = points || 0;
+  if (currentPoints < requiredPoints) {
+    item.querySelector('.redeem-button').disabled = true;
+    item.querySelector('.redeem-button').classList.add("opacity-50", "cursor-not-allowed");
+  }
+});
+
   </script>
 </body>
 </html>
