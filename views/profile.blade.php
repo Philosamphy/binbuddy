@@ -272,7 +272,7 @@
   <div class="modal" id="modal">
     <div class="modal-inner">
       <h2 class="text-2xl font-bold text-green-700 mb-4">Edit your BinBuddy Profile</h2>
-      <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}" class="space-y-4">
+      <form id="editProfileForm" method="POST" action="/profile/edit" class="space-y-4">
         @csrf
         <input type="text" id="fullname" name="fullname" placeholder="Full Name" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
         <input type="email" id="email" name="email" placeholder="Email Address" required class="w-full px-4 py-2 border border-gray-300 rounded-full" />
