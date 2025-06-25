@@ -69,7 +69,7 @@
         <button onclick="dismissNotification()" class="absolute top-2 right-3 text-black text-xl font-bold hover:text-red-600">✕</button>
         <p class="text-black font-semibold">
           <center>Congratulations! 🎉</center><br />
-          You’ve just earned the <strong>Dumpster Detective</strong> badge for recycling 35 items this week!<br />
+          You’ve just earned the <strong>Dumpster Detective</strong> badge for recycling <span id="points" class="text-black font-semibold">0 </span> items this week!<br />
           Keep digging through the trash — responsibly! ♻️ 🐾<br />
           <center><button onclick="window.location.href='/profile'" class="mt-2 px-4 py-2 bg-blue-700 text-white font-semibold rounded hover:bg-blue-800 transition">
            View your badge
@@ -185,30 +185,47 @@
     document.getElementById('streakModal').classList.add('hidden');
   }
 
-   const activeLevels = parseInt(localStorage.getItem('activeLevels') || '12');
-  const levelContainer = document.getElementById('levels');
+const activeLevels = parseInt(localStorage.getItem('activeLevels') || '1');
+const levelContainer = document.getElementById('levels');
+const submittedLevels = JSON.parse(localStorage.getItem('submittedLevels') || '[]');
 
-  const submittedLevels = JSON.parse(localStorage.getItem('submittedLevels') || '[]');
-  for (let i = 1; i <= 30; i++) {
-    const isActive = i <= activeLevels;
-    const isSubmitted = submittedLevels.includes(i);
-    const offsetClass = i % 4 === 1 ? 'translate-x-4' :
-                        i % 4 === 2 ? '-translate-x-4' :
-                        i % 4 === 3 ? '-translate-x-6' : '-translate-x-6';
+for (let i = 1; i <= 30; i++) {
+  const isActive = i <= activeLevels;
+  const isSubmitted = submittedLevels.includes(i);
+  const isLocked = i > activeLevels || (i < activeLevels && !submittedLevels.includes(i));
 
-    let bgColorClass = 'bg-gray-400 cursor-not-allowed';
-    if (isActive && isSubmitted) {
-      bgColorClass = 'bg-yellow-700 cursor-pointer';
-    } else if (isActive) {
-      bgColorClass = 'bg-green-500 hover:scale-110 cursor-pointer';
-    }
+  const offsetClass = i % 4 === 1 ? 'translate-x-4' :
+                      i % 4 === 2 ? '-translate-x-4' :
+                      i % 4 === 3 ? '-translate-x-6' : '-translate-x-6';
 
-    levelContainer.innerHTML += `
-      <div class="level-step ${bgColorClass} text-white w-12 h-12 flex items-center justify-center rounded-full shadow-md transform transition ${offsetClass}"
-        ${isActive ? `onclick="showStreakForm(${i})"` : ''}>
-        ${i}
-      </div>`;
+  let bgColorClass = 'bg-gray-400 cursor-not-allowed';
+  let tooltip = '';
+
+  if (isLocked && !isSubmitted) {
+    tooltip = `Locked: Complete earlier levels first 🔒`;
   }
+
+  if (isActive && isSubmitted) {
+    bgColorClass = 'bg-yellow-700 cursor-pointer';
+    tooltip = `Level ${i} submitted`;
+  } else if (isActive && !isLocked) {
+    bgColorClass = 'bg-green-500 hover:scale-110 cursor-pointer';
+    tooltip = `Click to submit Level ${i}`;
+  }
+
+  levelContainer.innerHTML += `
+    <div 
+      class="relative group level-step ${bgColorClass} text-white w-12 h-12 flex items-center justify-center rounded-full shadow-md transform transition ${offsetClass}" 
+      ${!isLocked ? `onclick="showStreakForm(${i})"` : ''}
+    >
+      ${i}
+      ${isLocked && !isSubmitted ? `
+        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 scale-90 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition">
+          ${tooltip}
+        </div>
+      ` : ''}
+    </div>`;
+}
 
   function submitStreak(event) {
     event.preventDefault();
@@ -224,49 +241,46 @@
 
     const today = new Date().toISOString().split('T')[0];
     const streaks = JSON.parse(localStorage.getItem('streaks') || '[]');
-
     let dailySubmittedLevels = JSON.parse(localStorage.getItem('dailySubmittedLevels') || '{}');
-        if (!dailySubmittedLevels[today]) {
-           dailySubmittedLevels[today] = [];
-       }
-
-       if (!dailySubmittedLevels[today].includes(level)) {
-    dailySubmittedLevels[today].push(level);
-    localStorage.setItem('dailySubmittedLevels', JSON.stringify(dailySubmittedLevels));
-
-    if (!streaks.includes(today)) {
-      streaks.push(today);
-      localStorage.setItem('streaks', JSON.stringify(streaks));
+    
+    if (!dailySubmittedLevels[today]) {
+      dailySubmittedLevels[today] = [];
     }
 
-    if (!submittedLevels.includes(level)) {
-      submittedLevels.push(level);
-      localStorage.setItem('submittedLevels', JSON.stringify(submittedLevels));
+    if (!dailySubmittedLevels[today].includes(level)) {
+      dailySubmittedLevels[today].push(level);
+      localStorage.setItem('dailySubmittedLevels', JSON.stringify(dailySubmittedLevels));
+
+      if (!streaks.includes(today)) {
+        streaks.push(today);
+        localStorage.setItem('streaks', JSON.stringify(streaks));
+      }
+
+      if (!submittedLevels.includes(level)) {
+        submittedLevels.push(level);
+        localStorage.setItem('submittedLevels', JSON.stringify(submittedLevels));
+      }
+
+      let currentActive = parseInt(localStorage.getItem('activeLevels') || '24');
+      const newLevel = Math.max(currentActive, level);
+      localStorage.setItem('activeLevels', newLevel);
+
+      let points = parseInt(localStorage.getItem('points') || '0');
+      const updatedPoints = points + 10;
+      localStorage.setItem('points', updatedPoints);
+      document.getElementById("points").textContent = updatedPoints;
     }
 
-    let activeLevels = parseInt(localStorage.getItem('activeLevels') || '12');
-    const newLevel = Math.max(activeLevels + 1, level);
-    localStorage.setItem('activeLevels', newLevel);
-
-    let points = parseInt(localStorage.getItem('points') || '0');
-    let updatedPoints = points + 10;
-    localStorage.setItem('points', updatedPoints);
-  }
-
-      closeStreakForm();
-      alert("Streak submitted!");
-      location.reload();
+    closeStreakForm();
+    alert("Streak submitted!");
+    location.reload();
   }
 
   window.onload = () => {
     initChart();
+    const currentPoints = parseInt(localStorage.getItem('points') || '0');
+    document.getElementById("points").textContent = currentPoints;
   };
-
-  document.getElementById("submitStreakBtn").addEventListener("click", function (){
-     let points = parseInt(localStorage.getItem('points') || '0');
-     let updatedPoints = points + 10;
-     localStorage.setItem('points', updatedPoints);
-  })
 </script>
 
 <script>
@@ -278,5 +292,5 @@
   }
 </script>
 
-</body>
-</html>
+  </body>
+  </html>
